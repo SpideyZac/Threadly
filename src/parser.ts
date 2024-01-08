@@ -77,21 +77,21 @@ export default class Parser extends CstParser {
             const startOffset = error.token.startOffset;
             const endOffset = error.token.endOffset as number;
 
-            const beforeError = inputText.substring(startOffset - 25, startOffset);
+            const beforeError = inputText.substring(0, startOffset);
             let errorText;
             let afterError;
             if (startOffset === endOffset) {
                 errorText = inputText[startOffset];
-                afterError = inputText.substring(endOffset + 1, endOffset + 25);
+                afterError = inputText.substring(endOffset + 1);
             } else {
                 errorText = inputText.substring(startOffset, endOffset);
-                afterError = inputText.substring(endOffset, endOffset + 25);
+                afterError = inputText.substring(endOffset);
             }
 
             console.error(`Error at ${error.token.startLine}:${error.token.startColumn} - ${error.token.endLine}:${error.token.endColumn}`);
-            process.stdout.write(`... ${beforeError}`);
-            process.stdout.write(`>>> ${errorText} <<< ${error.message}   ...  `);
-            process.stdout.write(`${afterError} ...\n`);
+            process.stdout.write(beforeError);
+            process.stdout.write(`>>> ${errorText} <<< ${error.message}   `);
+            process.stdout.write(`${afterError}\n`);
         });
     }
 }
