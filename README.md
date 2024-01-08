@@ -11,23 +11,33 @@ Threadly is a lightweight and modern concurrency scripting language designed to 
 task downloadAndWrite
 data = downloadFile("http://example.com/file/1.png")
 signal("downloadLog")
-endTask
+endtask
 
 task runCommand
 executeCommand("python main.py")
-endTask
+endtask
 
 task log
 waitFor("downloadLog")
 log("Donwloaded and Wrote!")
 runCommand()
-endTask
+endtask
 
 parallel
-downloadAndWrite()
-log()
+!downloadAndWrite
+!log
 ```
 
 # Installation
 
-Coming soon!
+```bash
+bun install
+```
+
+# Run
+
+**For now, as Threadly is in very early beta, you must change `src.index.ts.input` to use your script**
+
+```bash
+bun --bun start
+```

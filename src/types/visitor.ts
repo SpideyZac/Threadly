@@ -1,62 +1,118 @@
 import type { CstNode, ICstVisitor, IToken } from "chevrotain";
 
-export interface ExpressionCstNode extends CstNode {
-  name: "expression";
-  children: ExpressionCstChildren;
+export interface ProgramCstNode extends CstNode {
+    name: "program";
+    children: ProgramCstChildren;
 }
 
-export type ExpressionCstChildren = {
-  additionExpression: AdditionExpressionCstNode[];
+export type ProgramCstChildren = {
+    statement?: StatementCstNode[];
 };
 
-export interface AdditionExpressionCstNode extends CstNode {
-  name: "additionExpression";
-  children: AdditionExpressionCstChildren;
+export interface StatementCstNode extends CstNode {
+    name: "statement";
+    children: StatementCstChildren;
 }
 
-export type AdditionExpressionCstChildren = {
-  lhs: MultiplicationExpressionCstNode[];
-  AdditionOperator?: IToken[];
-  rhs?: MultiplicationExpressionCstNode[];
+export type StatementCstChildren = {
+    taskClause?: TaskClauseCstNode[];
+    parallelClause?: ParallelClauseCstNode[];
 };
 
-export interface MultiplicationExpressionCstNode extends CstNode {
-  name: "multiplicationExpression";
-  children: MultiplicationExpressionCstChildren;
+export interface LogClauseCstNode extends CstNode {
+    name: "logClause";
+    children: LogClauseCstChildren;
 }
 
-export type MultiplicationExpressionCstChildren = {
-  lhs: AtomicExpressionCstNode[];
-  MultiplicationOperator?: IToken[];
-  rhs?: AtomicExpressionCstNode[];
+export type LogClauseCstChildren = {
+    Log: IToken[];
+    LParen: IToken[];
+    String: IToken[];
+    RParen: IToken[];
 };
 
-export interface AtomicExpressionCstNode extends CstNode {
-  name: "atomicExpression";
-  children: AtomicExpressionCstChildren;
+export interface SleepClauseCstNode extends CstNode {
+    name: "sleepClause";
+    children: SleepClauseCstChildren;
 }
 
-export type AtomicExpressionCstChildren = {
-  parenthesisExpression?: ParenthesisExpressionCstNode[];
-  NumberLiteral?: IToken[];
-  FloatLiteral?: IToken[];
+export type SleepClauseCstChildren = {
+    Sleep: IToken[];
+    LParen: IToken[];
+    NumberLiteral: IToken[];
+    RParen: IToken[];
 };
 
-export interface ParenthesisExpressionCstNode extends CstNode {
-  name: "parenthesisExpression";
-  children: ParenthesisExpressionCstChildren;
+export interface TaskKeywordCstNode extends CstNode {
+    name: "taskKeyword";
+    children: TaskKeywordCstChildren;
 }
 
-export type ParenthesisExpressionCstChildren = {
-  LParen: IToken[];
-  expression: ExpressionCstNode[];
-  RParen: IToken[];
+export type TaskKeywordCstChildren = {
+    logClause?: LogClauseCstNode[];
+    sleepClause?: SleepClauseCstNode[];
+    taskCall?: TaskCallCstNode[];
+};
+
+export interface TaskBodyCstNode extends CstNode {
+    name: "taskBody";
+    children: TaskBodyCstChildren;
+}
+
+export type TaskBodyCstChildren = {
+    taskKeyword?: TaskKeywordCstNode[];
+};
+
+export interface TaskClauseCstNode extends CstNode {
+    name: "taskClause";
+    children: TaskClauseCstChildren;
+}
+
+export type TaskClauseCstChildren = {
+    Task: IToken[];
+    Indentifier: IToken[];
+    taskBody: TaskBodyCstNode[];
+    EndTask: IToken[];
+};
+
+export interface TaskCallCstNode extends CstNode {
+    name: "taskCall";
+    children: TaskCallCstChildren;
+}
+
+export type TaskCallCstChildren = {
+    Exclamation: IToken[];
+    Indentifier: IToken[];
+};
+
+export interface ParallelBodyCstNode extends CstNode {
+    name: "parallelBody";
+    children: ParallelBodyCstChildren;
+}
+
+export type ParallelBodyCstChildren = {
+    taskCall?: TaskCallCstNode[];
+};
+
+export interface ParallelClauseCstNode extends CstNode {
+    name: "parallelClause";
+    children: ParallelClauseCstChildren;
+}
+
+export type ParallelClauseCstChildren = {
+    Parallel: IToken[];
+    parallelBody: ParallelBodyCstNode[];
 };
 
 export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
-  expression(children: ExpressionCstChildren, param?: IN): OUT;
-  additionExpression(children: AdditionExpressionCstChildren, param?: IN): OUT;
-  multiplicationExpression(children: MultiplicationExpressionCstChildren, param?: IN): OUT;
-  atomicExpression(children: AtomicExpressionCstChildren, param?: IN): OUT;
-  parenthesisExpression(children: ParenthesisExpressionCstChildren, param?: IN): OUT;
+    program(children: ProgramCstChildren, param?: IN): OUT;
+    statement(children: StatementCstChildren, param?: IN): OUT;
+    logClause(children: LogClauseCstChildren, param?: IN): OUT;
+    sleepClause(children: SleepClauseCstChildren, param?: IN): OUT;
+    taskKeyword(children: TaskKeywordCstChildren, param?: IN): OUT;
+    taskBody(children: TaskBodyCstChildren, param?: IN): OUT;
+    taskClause(children: TaskClauseCstChildren, param?: IN): OUT;
+    taskCall(children: TaskCallCstChildren, param?: IN): OUT;
+    parallelBody(children: ParallelBodyCstChildren, param?: IN): OUT;
+    parallelClause(children: ParallelClauseCstChildren, param?: IN): OUT;
 }

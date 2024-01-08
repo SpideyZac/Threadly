@@ -1,6 +1,6 @@
 import { CstParser } from "chevrotain";
 
-import { AdditionOperator, FloatLiteral, LParen, MultiplicationOperator, NumberLiteral, RParen, allTokens } from "./tokens";
+import { allTokens, Indentifier, Parallel, Task, Log, LParen, String, RParen, EndTask, Exclamation, Sleep, NumberLiteral } from "./tokens";
 
 export default class Parser extends CstParser {
     constructor() {
@@ -8,37 +8,67 @@ export default class Parser extends CstParser {
         this.performSelfAnalysis();
     }
 
-    public expression = this.RULE("expression", () => {
-        this.SUBRULE(this.additionExpression);
-    });
-
-    public additionExpression = this.RULE("additionExpression", () => {
-        this.SUBRULE(this.multiplicationExpression, { LABEL: "lhs" });
+    public program = this.RULE("program", () => {
         this.MANY(() => {
-            this.CONSUME(AdditionOperator);
-            this.SUBRULE2(this.multiplicationExpression, { LABEL: "rhs" });
+            this.SUBRULE(this.statement);
         });
     });
 
-    public multiplicationExpression = this.RULE("multiplicationExpression", () => {
-        this.SUBRULE(this.atomicExpression, { LABEL: "lhs" });
-        this.MANY(() => {
-            this.CONSUME(MultiplicationOperator);
-            this.SUBRULE2(this.atomicExpression, { LABEL: "rhs" });
-        });
-    });
-
-    public atomicExpression = this.RULE("atomicExpression", () => {
+    public statement = this.RULE("statement", () => {
         this.OR([
-            { ALT: () => this.SUBRULE(this.parenthesisExpression) },
-            { ALT: () => this.CONSUME(NumberLiteral) },
-            { ALT: () => this.CONSUME(FloatLiteral) },
+            { ALT: () => this.SUBRULE(this.taskClause) },
+            { ALT: () => this.SUBRULE(this.parallelClause) },
         ]);
     });
 
-    public parenthesisExpression = this.RULE("parenthesisExpression", () => {
+    public logClause = this.RULE("logClause", () => {
+        this.CONSUME(Log);
         this.CONSUME(LParen);
-        this.SUBRULE(this.expression);
+        this.CONSUME(String);
         this.CONSUME(RParen);
+    });
+
+    public sleepClause = this.RULE("sleepClause", () => {
+        this.CONSUME(Sleep);
+        this.CONSUME(LParen);
+        this.CONSUME(NumberLiteral);
+        this.CONSUME(RParen);
+    });
+
+    public taskKeyword = this.RULE("taskKeyword", () => {
+        this.OR([
+            { ALT: () => this.SUBRULE(this.logClause) },
+            { ALT: () => this.SUBRULE(this.sleepClause) },
+            { ALT: () => this.SUBRULE(this.taskCall) },
+        ]);
+    });
+
+    public taskBody = this.RULE("taskBody", () => {
+        this.MANY(() => {
+            this.SUBRULE(this.taskKeyword);
+        });
+    });
+
+    public taskClause = this.RULE("taskClause", () => {
+        this.CONSUME(Task);
+        this.CONSUME(Indentifier);
+        this.SUBRULE(this.taskBody);
+        this.CONSUME(EndTask);
+    });
+
+    public taskCall = this.RULE("taskCall", () => {
+        this.CONSUME(Exclamation);
+        this.CONSUME(Indentifier);
+    });
+
+    public parallelBody = this.RULE("parallelBody", () => {
+        this.MANY(() => {
+            this.SUBRULE(this.taskCall);
+        });
+    });
+
+    public parallelClause = this.RULE("parallelClause", () => {
+        this.CONSUME(Parallel);
+        this.SUBRULE(this.parallelBody);
     });
 }

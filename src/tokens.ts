@@ -12,70 +12,90 @@ export const NumberLiteral = createToken({
     longer_alt: FloatLiteral,
 });
 
-// Operators
-export const AdditionOperator = createToken({
-    name: "AdditionOperator",
-    pattern: Lexer.NA,
+// Strings
+export const String = createToken({
+    name: "String",
+    pattern: /"[^"]*"/,
 });
 
-export const Plus = createToken({
-    name: "Plus",
-    pattern: /\+/,
-    categories: AdditionOperator,
+// Indentifiers
+export const Indentifier = createToken({
+    name: "Indentifier",
+    pattern: /[a-zA-Z_]\w*/,
+    longer_alt: String,
 });
 
-export const Minus = createToken({
-    name: "Minus",
-    pattern: /-/,
-    categories: AdditionOperator,
+// Statements
+export const EndTask = createToken({
+    name: "EndTask",
+    pattern: /endtask/,
+    longer_alt: Indentifier,
 });
 
-export const MultiplicationOperator = createToken({
-    name: "MultiplicationOperator",
-    pattern: Lexer.NA,
+export const Task = createToken({
+    name: "Task",
+    pattern: /task/,
+    longer_alt: [Indentifier, EndTask],
 });
 
-export const Multiply = createToken({
-    name: "Multiply",
-    pattern: /\*/,
-    categories: MultiplicationOperator,
+export const Parallel = createToken({
+    name: "Parallel",
+    pattern: /parallel/,
+    longer_alt: Indentifier,
 });
 
-export const Divide = createToken({
-    name: "Divide",
-    pattern: /\//,
-    categories: MultiplicationOperator,
+// Keywords
+export const Log = createToken({
+    name: "Log",
+    pattern: /log/,
+    longer_alt: Indentifier,
 });
 
-export const LParen = createToken({
-    name: "LParen",
-    pattern: /\(/,
-});
-
-export const RParen = createToken({
-    name: "RParen",
-    pattern: /\)/,
+export const Sleep = createToken({
+    name: "Sleep",
+    pattern: /sleep/,
+    longer_alt: Indentifier,
 });
 
 // Whitespace
 export const Whitespace = createToken({
     name: "WhiteSpace",
     pattern: /\s+/,
-    line_breaks: true,
     group: Lexer.SKIPPED,
+});
+
+// Symbols
+export const LParen = createToken({
+    name: "LParen",
+    pattern: /\(/,
+    longer_alt: String,
+});
+
+export const RParen = createToken({
+    name: "RParen",
+    pattern: /\)/,
+    longer_alt: String,
+});
+
+export const Exclamation = createToken({
+    name: "Exclamation",
+    pattern: /!/,
+    longer_alt: String,
 });
 
 // All tokens
 export const allTokens = [
     Whitespace,
-    Plus,
-    Minus,
-    Multiply,
-    Divide,
-    LParen,
-    RParen,
+    Task,
+    EndTask,
+    Log,
+    Sleep,
+    Parallel,
+    Indentifier,
+    String,
     NumberLiteral,
     FloatLiteral,
-    AdditionOperator,
-    MultiplicationOperator,
+    LParen,
+    RParen,
+    Exclamation,
 ];
