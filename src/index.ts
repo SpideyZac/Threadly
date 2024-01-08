@@ -25,10 +25,14 @@ const parser = new Parser();
 parser.input = tokens;
 const cst = parser.program();
 
-// console.log(generateCstDts(parser.getGAstProductions()))
+if (parser.errors.length > 0) {
+    parser.printErrorsWithSource(input);
+} else {
+    // console.log(generateCstDts(parser.getGAstProductions()))
 
-const visitor = new Visitor();
-const result = visitor.visit(cst);
+    const visitor = new Visitor();
+    const result = visitor.visit(cst);
 
-let interpreter = new Interpreter(result);
-interpreter.interpret();
+    let interpreter = new Interpreter(result);
+    interpreter.interpret();
+}
