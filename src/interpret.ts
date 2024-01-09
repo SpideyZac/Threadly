@@ -12,27 +12,46 @@ export default class Interpreter {
 
     handleEvent(event: Event) {
         switch (event.type) {
-            
+
         }
     }
 
-    interpret() {
+    runWorkers(tasks: String[], maxThreads: number) {
         const workerURL = new URL("./interpreterWorker.js", import.meta.url);
-    
-        this.program.parallel.tasks.forEach((task) => {
+
+        if (tasks.length === 0) {
+            return;
+        }
+
+        for (let i = 0; i < maxThreads; i++) {
+            let task = tasks.shift();
+
             const worker = new Worker(workerURL);
             worker.postMessage({
                 task: this.program.tasks.find((t) => t.name === task)
             } as WorkerEvent);
             this.workers.push(worker);
-    
+
             worker.onmessage = (message) => {
                 if (message.data === "done") {
                     worker.terminate();
+                    this.runWorkers(tasks, maxThreads);
                 } else {
                     this.handleEvent(message.data);
                 }
             };
-        });
+        }
+    }
+
+    interpret() {
+        let tasks = this.program.parallel.tasks.slice();
+        let maxThreads: number;
+        if (this.program.parallel.maxThreads) {
+            maxThreads = this.program.parallel.maxThreads;
+        } else {
+            maxThreads = tasks.length;
+        }
+
+        this.runWorkers(tasks, maxThreads);
     }
 }

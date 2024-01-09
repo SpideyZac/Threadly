@@ -64,6 +64,12 @@ export const Whitespace = createToken({
     group: Lexer.SKIPPED,
 });
 
+export const Comment = createToken({
+    name: "Comment",
+    pattern: /\/\/.*/,
+    group: Lexer.SKIPPED,
+});
+
 // Symbols
 export const LParen = createToken({
     name: "LParen",
@@ -86,6 +92,7 @@ export const Exclamation = createToken({
 // All tokens
 export const allTokens = [
     Whitespace,
+    Comment,
     Task,
     EndTask,
     Log,

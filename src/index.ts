@@ -1,38 +1,49 @@
-import { Lexer, generateCstDts } from "chevrotain";
+import { Lexer } from "chevrotain";
+import { Command } from "commander";
+import figlet from "figlet";
 
 import { allTokens } from "./tokens";
 import Parser from "./parser";
 import Visitor from "./visitor";
 import Interpreter from "./interpret";
 
-const input = `task log1
-sleep(3000)
-log("Hello World! (hi)")
-endtask
+const program = new Command();
+console.log(figlet.textSync("Threadly"));
 
-task log2
-log("Hi!")
-!log1
-endtask
-parallel
-!log1
-!log2`;
+program
+    .version("0.0.1")
+    .description("The interpreter for the Threadly language")
+    .option("-f, --file <file>", "The file to interpret")
+    .parse(process.argv);
 
-const lexer = new Lexer(allTokens);
-const { tokens } = lexer.tokenize(input);
+const options = program.opts();
 
-const parser = new Parser();
-parser.input = tokens;
-const cst = parser.program();
-
-if (parser.errors.length > 0) {
-    parser.printErrorsWithSource(input);
-} else {
-    // console.log(generateCstDts(parser.getGAstProductions()))
-
-    const visitor = new Visitor();
-    const result = visitor.visit(cst);
-
-    let interpreter = new Interpreter(result);
-    interpreter.interpret();
+if (!options.file) {
+    program.help();
 }
+
+const file = Bun.file(options.file);
+file.text().then((text) => {
+    console.clear();
+    const input = text;
+
+    const lexer = new Lexer(allTokens);
+    const { tokens } = lexer.tokenize(input);
+
+    const parser = new Parser();
+    parser.input = tokens;
+    const cst = parser.program();
+
+    if (parser.errors.length > 0) {
+        parser.printErrorsWithSource(input);
+    } else {
+        const visitor = new Visitor();
+        const result = visitor.visit(cst);
+
+        let interpreter = new Interpreter(result);
+        interpreter.interpret();
+    }
+}).catch(() => {
+    console.error(`Could not read file "${options.file}"`);
+    process.exit(1);
+});

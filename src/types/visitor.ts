@@ -101,6 +101,7 @@ export interface ParallelClauseCstNode extends CstNode {
 
 export type ParallelClauseCstChildren = {
     Parallel: IToken[];
+    NumberLiteral?: IToken[];
     parallelBody: ParallelBodyCstNode[];
 };
 

@@ -1,9 +1,6 @@
-import { tokenMatcher } from "chevrotain";
-
 import type * as types from "./types/visitor";
 import type { LogCall, SleepCall, TaskCall, Keyword, Parallel, Task } from "./types/language";
 import Parser from "./parser";
-import {} from "./tokens";
 
 const parser = new Parser();
 const BaseCstVisitor = parser.getBaseCstVisitorConstructor();
@@ -101,6 +98,9 @@ export default class Visitor extends BaseCstVisitor {
     }
 
     parallelClause(ctx: types.ParallelClauseCstChildren) {
+        if (ctx.NumberLiteral) {
+            this.parallel.maxThreads = Number(ctx.NumberLiteral[0].image);
+        }
         this.visit(ctx.parallelBody);
     }
 }

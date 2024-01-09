@@ -27,4 +27,5 @@ export interface Task {
 
 export interface Parallel {
     tasks: String[];
+    maxThreads?: number;
 }

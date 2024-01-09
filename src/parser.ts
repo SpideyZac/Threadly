@@ -69,29 +69,43 @@ export default class Parser extends CstParser {
 
     public parallelClause = this.RULE("parallelClause", () => {
         this.CONSUME(Parallel, { ERR_MSG: "Expected parallel" });
+        this.OPTION(() => {
+            this.CONSUME(NumberLiteral, { ERR_MSG: "Expected integer" });
+        });
         this.SUBRULE(this.parallelBody);
     });
 
     printErrorsWithSource(inputText: string) {
-        this.errors.forEach(error => {
-            const startOffset = error.token.startOffset;
-            const endOffset = error.token.endOffset as number;
+        let error = this.errors[0];
+        const startOffset = error.token.startOffset;
+        const endOffset = error.token.endOffset as number;
 
-            const beforeError = inputText.substring(0, startOffset);
-            let errorText;
-            let afterError;
-            if (startOffset === endOffset) {
-                errorText = inputText[startOffset];
-                afterError = inputText.substring(endOffset + 1);
-            } else {
-                errorText = inputText.substring(startOffset, endOffset);
-                afterError = inputText.substring(endOffset);
-            }
+        let errorText;
+        let afterError;
 
-            console.error(`Error at ${error.token.startLine}:${error.token.startColumn} - ${error.token.endLine}:${error.token.endColumn}`);
-            process.stdout.write(beforeError);
-            process.stdout.write(`>>> ${errorText} <<< ${error.message}   `);
-            process.stdout.write(`${afterError}\n`);
-        });
+        let lines = inputText.split("\n");
+
+        if (startOffset === endOffset) {
+            errorText = inputText[startOffset];
+            afterError = inputText.substring(endOffset + 1);
+        } else {
+            errorText = inputText.substring(startOffset, endOffset);
+            afterError = inputText.substring(endOffset);
+        }
+
+        let startLine = error.token.startLine as number - 1;
+        let endLine = error.token.endLine as number - 1;
+
+        console.error(`Error at ${startLine + 1}:${error.token.startColumn} - ${endLine + 1}:${error.token.endColumn}`);
+        if (startLine as number >= 1) {
+            console.log(lines[startLine - 1]);
+        }
+        for (let i = startLine; i <= endLine; i++) {
+            console.error(`${lines[i]}`);
+        }
+        console.error(`${" ".repeat(error.token.startColumn as number - 1)}${"^".repeat(errorText.length)} ${error.message}`);
+        if (endLine < lines.length) {
+            console.log(lines[endLine + 1]);
+        }
     }
 }

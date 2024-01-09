@@ -1,0 +1,13 @@
+task log1
+    sleep(3000)
+    log("Hello World! (hi)")
+endtask
+
+task log2
+    log("Hi!")
+    !log1
+endtask
+
+parallel 1
+    !log1
+    !log2
