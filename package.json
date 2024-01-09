@@ -4,9 +4,23 @@
   "type": "module",
   "scripts": {
     "start": "bun --bun ./src/index.ts",
-    "types": "bun --bun ./src/getTypes.ts",
-    "build": "bun build --compile ./src/index.ts --outfile threadly --minify && bun build ./src/index.ts --outdir build/bun --target=bun && bun build ./src/index.ts --outdir build/node --target=node",
+    "types": "bun --bun ./getTypes.ts",
+    "build": "tsc",
     "test": "bun test"
+  },
+  "author": "SpideyZac",
+  "keywords": [
+    "threadly",
+    "thread",
+    "threads",
+    "worker"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/SpideyZac/Threadly/",
+  "description": "The interpreter for the Threadly language.",
+  "version": "0.0.1",
+  "bin": {
+    "threadly": "./src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

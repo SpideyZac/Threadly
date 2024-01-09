@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Lexer } from "chevrotain";
 import { Command } from "commander";
 import figlet from "figlet";
