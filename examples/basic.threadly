@@ -8,6 +8,6 @@ task log2
     !log1
 endtask
 
-parallel 1
+parallel 1 // Only use 1 thread
     !log1
     !log2
