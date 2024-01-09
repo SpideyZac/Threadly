@@ -6,26 +6,21 @@
 
 Threadly is a lightweight and modern concurrency scripting language designed to simplify parallel execution and asynchronous programming tasks. It provides a concise syntax and essential built-in actions, making it easy to handle concurrent workflows, execute HTTP requests, manage files, and control timing within your scripts.
 
-# Example
+# Example (Check out `examples/`)
 ```threadly
-task downloadAndWrite
-data = downloadFile("http://example.com/file/1.png")
-signal("downloadLog")
+task log1
+    sleep(3000)
+    log("Hello World! (hi)")
 endtask
 
-task runCommand
-executeCommand("python main.py")
-endtask
-
-task log
-waitFor("downloadLog")
-log("Donwloaded and Wrote!")
-runCommand()
+task log2
+    log("Hi!")
+    !log1
 endtask
 
 parallel
-!downloadAndWrite
-!log
+    !log1
+    !log2
 ```
 
 # Installation
