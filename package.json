@@ -5,6 +5,7 @@
   "scripts": {
     "start": "bun --bun ./src/index.ts",
     "types": "bun --bun ./src/getTypes.ts",
+    "build": "bun build --compile ./src/index.ts --outfile threadly --minify && bun build ./src/index.ts --outdir build/bun --target=bun && bun build ./src/index.ts --outdir build/node --target=node",
     "test": "bun test"
   },
   "devDependencies": {
