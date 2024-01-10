@@ -32,7 +32,7 @@ parallel
 
 ```bash
 bun add --global threadly
-bunx threadly --help
+bunx --bun threadly --help
 ```
 
 # Run
@@ -40,7 +40,7 @@ bunx threadly --help
 **For now, as Threadly is in very early beta, you must use Bun to run the interpreter!**
 
 ```bash
-bunx threadly --file <file to run here>
+bunx --bun threadly --file <file to run here>
 ```
 
 # Docs

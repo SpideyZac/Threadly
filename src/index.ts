@@ -13,7 +13,7 @@ const program = new Command();
 console.log(figlet.textSync("Threadly"));
 
 program
-    .version("0.0.4")
+    .version("0.0.5")
     .description("The interpreter for the Threadly language")
     .option("-f, --file <file>", "The file to interpret")
     .option("-c", "--clear", "Clear the console before running")
