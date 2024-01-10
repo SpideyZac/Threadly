@@ -1,13 +1,15 @@
 task log1
     sleep(3000)
     log("Hello World! (hi)")
+    signal("test")
 endtask
 
 task log2
     log("Hi!")
-    !log1
+    waitfor("test")
+    log("Hi!")
 endtask
 
-parallel
+parallel 2
     !log1
     !log2

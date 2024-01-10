@@ -1,0 +1,13 @@
+task log1
+    sleep(3000)
+    log("Hello World! (hi)")
+endtask
+
+task log2
+    log("Hi!")
+    !log1
+endtask
+
+parallel 1 // Only use 1 thread
+    !log1 // Log 1 will run
+    !log2 // Log 2 will run after log 1 finishes as there are not enough threads to run both at the same time

@@ -46,7 +46,13 @@ file.text().then((text) => {
         parser.printErrorsWithSource(input);
     } else {
         const visitor = new Visitor();
-        const result = visitor.visit(cst);
+        let result;
+        try {
+            result = visitor.visit(cst);
+        } catch (e: any) {
+            console.error(e.message);
+            process.exit(1);
+        }
 
         let interpreter = new Interpreter(result);
         interpreter.interpret();
