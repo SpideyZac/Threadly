@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 import { Lexer } from "chevrotain";
 import { Command } from "commander";
