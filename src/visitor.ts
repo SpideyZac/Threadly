@@ -100,6 +100,9 @@ export default class Visitor extends BaseCstVisitor {
     }
 
     taskClause(ctx: types.TaskClauseCstChildren) {
+        if (this.tasks.find((task) => task.name === ctx.Indentifier[0].image)) {
+            throw new Error(`Task ${ctx.Indentifier[0].image} already exists`);
+        }
         const task: Task = {
             name: ctx.Indentifier[0].image,
             body: [],
