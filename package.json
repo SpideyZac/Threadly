@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "bun --bun ./src/index.ts",
-    "types": "bun --bun ./getTypes.ts"
+    "types": "bun --bun ./getTypes.ts",
+    "format": "dos2unix ./src/index.ts"
   },
   "author": "SpideyZac",
   "keywords": [
@@ -16,7 +17,7 @@
   "license": "MIT",
   "repository": "https://github.com/SpideyZac/Threadly/",
   "description": "The interpreter for the Threadly language.",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "bin": {
     "threadly": "./src/index.ts"
   },
