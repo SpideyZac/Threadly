@@ -1,5 +1,5 @@
 import type { Task, Parallel } from "./types/language";
-import type { Event, WorkerEvent } from "./types/interpreter";
+import type { WorkerCom, WorkerEvent } from "./types/interpreter";
 
 export default class Interpreter {
     program: { tasks: Task[], parallel: Parallel };
@@ -10,9 +10,15 @@ export default class Interpreter {
         this.workers = [];
     }
 
-    handleEvent(event: Event) {
+    handleEvent(event: WorkerCom, index: number) {
         switch (event.type) {
-
+            case "signal":
+                this.workers.forEach((worker, i) => {
+                    if (i !== index) {
+                        worker.postMessage(event);
+                    }
+                });
+                break;
         }
     }
 
@@ -23,7 +29,7 @@ export default class Interpreter {
             return;
         }
 
-        for (let i = 0; i < maxThreads; i++) {
+        for (let i = this.workers.length; i < maxThreads; i++) {
             let task = tasks.shift();
 
             const worker = new Worker(workerURL);
@@ -35,9 +41,10 @@ export default class Interpreter {
             worker.onmessage = (message) => {
                 if (message.data === "done") {
                     worker.terminate();
+                    this.workers.splice(this.workers.indexOf(worker), 1);
                     this.runWorkers(tasks, maxThreads);
                 } else {
-                    this.handleEvent(message.data);
+                    this.handleEvent(message.data, this.workers.indexOf(worker));
                 }
             };
         }

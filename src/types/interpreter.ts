@@ -1,16 +1,18 @@
 import type { Task } from "./language";
 
-type EventType = "";
-type WorkerComType = "";
-
-export interface Event {
-    type: EventType;
-    data: { [k: string]: any };
-}
+type WorkerComType = "signal";
 
 export interface WorkerCom {
     type: WorkerComType;
     data: { [k: string]: any };
+}
+
+export interface SignalWorkerCom extends WorkerCom {
+    type: "signal";
+    data: {
+        signal: string;
+        value?: number | string;
+    };
 }
 
 export interface WorkerEvent {

@@ -43,6 +43,33 @@ export type SleepClauseCstChildren = {
     RParen: IToken[];
 };
 
+export interface SignalClauseCstNode extends CstNode {
+    name: "signalClause";
+    children: SignalClauseCstChildren;
+}
+
+export type SignalClauseCstChildren = {
+    Signal: IToken[];
+    LParen: IToken[];
+    signalName: IToken[];
+    NumberLiteral?: IToken[];
+    FloatLiteral?: IToken[];
+    String?: IToken[];
+    RParen: IToken[];
+};
+
+export interface WaitForClauseCstNode extends CstNode {
+    name: "waitForClause";
+    children: WaitForClauseCstChildren;
+}
+
+export type WaitForClauseCstChildren = {
+    WaitFor: IToken[];
+    LParen: IToken[];
+    String: IToken[];
+    RParen: IToken[];
+};
+
 export interface TaskKeywordCstNode extends CstNode {
     name: "taskKeyword";
     children: TaskKeywordCstChildren;
@@ -51,6 +78,8 @@ export interface TaskKeywordCstNode extends CstNode {
 export type TaskKeywordCstChildren = {
     logClause?: LogClauseCstNode[];
     sleepClause?: SleepClauseCstNode[];
+    signalClause?: SignalClauseCstNode[];
+    waitForClause?: WaitForClauseCstNode[];
     taskCall?: TaskCallCstNode[];
 };
 
@@ -110,6 +139,8 @@ export interface ICstNodeVisitor<IN, OUT> extends ICstVisitor<IN, OUT> {
     statement(children: StatementCstChildren, param?: IN): OUT;
     logClause(children: LogClauseCstChildren, param?: IN): OUT;
     sleepClause(children: SleepClauseCstChildren, param?: IN): OUT;
+    signalClause(children: SignalClauseCstChildren, param?: IN): OUT;
+    waitForClause(children: WaitForClauseCstChildren, param?: IN): OUT;
     taskKeyword(children: TaskKeywordCstChildren, param?: IN): OUT;
     taskBody(children: TaskBodyCstChildren, param?: IN): OUT;
     taskClause(children: TaskClauseCstChildren, param?: IN): OUT;

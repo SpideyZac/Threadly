@@ -1,6 +1,6 @@
 import { CstParser } from "chevrotain";
 
-import { allTokens, Indentifier, Parallel, Task, Log, LParen, String, RParen, EndTask, Exclamation, Sleep, NumberLiteral } from "./tokens";
+import { allTokens, Indentifier, Parallel, Task, Log, LParen, String, Signal, WaitFor, RParen, EndTask, Exclamation, Sleep, NumberLiteral, FloatLiteral } from "./tokens";
 
 export default class Parser extends CstParser {
     constructor() {
@@ -35,10 +35,33 @@ export default class Parser extends CstParser {
         this.CONSUME(RParen, { ERR_MSG: "Expected )" });
     });
 
+    public signalClause = this.RULE("signalClause", () => {
+        this.CONSUME(Signal, { ERR_MSG: "Expected signal" });
+        this.CONSUME(LParen, { ERR_MSG: "Expected (" });
+        this.CONSUME(String, { ERR_MSG: "Expected string | signal name", LABEL: "signalName" });
+        this.OPTION(() => {
+            this.OR([
+                { ALT: () => this.CONSUME(NumberLiteral, { ERR_MSG: "Expected integer" }) },
+                { ALT: () => this.CONSUME(FloatLiteral, { ERR_MSG: "Expected float" }) },
+                { ALT: () => this.CONSUME2(String, { ERR_MSG: "Expected string" }) },
+            ]);
+        });
+        this.CONSUME(RParen, { ERR_MSG: "Expected )" });
+    });
+
+    public waitForClause = this.RULE("waitForClause", () => {
+        this.CONSUME(WaitFor, { ERR_MSG: "Expected waitfor" });
+        this.CONSUME(LParen, { ERR_MSG: "Expected (" });
+        this.CONSUME(String, { ERR_MSG: "Expected string | signal name" });
+        this.CONSUME(RParen, { ERR_MSG: "Expected )" });
+    });
+
     public taskKeyword = this.RULE("taskKeyword", () => {
         this.OR([
             { ALT: () => this.SUBRULE(this.logClause) },
             { ALT: () => this.SUBRULE(this.sleepClause) },
+            { ALT: () => this.SUBRULE(this.signalClause) },
+            { ALT: () => this.SUBRULE(this.waitForClause) },
             { ALT: () => this.SUBRULE(this.taskCall) },
         ]);
     });
@@ -80,8 +103,8 @@ export default class Parser extends CstParser {
         const startOffset = error.token.startOffset;
         const endOffset = error.token.endOffset as number;
 
-        let errorText;
         let afterError;
+        let errorText;
 
         let lines = inputText.split("\n");
 

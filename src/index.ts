@@ -13,20 +13,26 @@ const program = new Command();
 console.log(figlet.textSync("Threadly"));
 
 program
-    .version("0.0.1")
+    .version("0.0.2")
     .description("The interpreter for the Threadly language")
     .option("-f, --file <file>", "The file to interpret")
+    .option("-c", "--clear", "Clear the console before running")
     .parse(process.argv);
 
 const options = program.opts();
 
 if (!options.file) {
-    program.help();
+    console.error("No file specified; Run with --help for usage");
+    process.exit(1);
 }
 
 const file = Bun.file(options.file);
 file.text().then((text) => {
-    console.clear();
+    if (options.clear) {
+        console.clear();
+    } else {
+        console.log("\n".repeat(50));
+    }
     const input = text;
 
     const lexer = new Lexer(allTokens);

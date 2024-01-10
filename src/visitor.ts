@@ -1,5 +1,5 @@
 import type * as types from "./types/visitor";
-import type { LogCall, SleepCall, TaskCall, Keyword, Parallel, Task } from "./types/language";
+import type { LogCall, SleepCall, TaskCall, SignalCall, WaitForCall, Keyword, Parallel, Task } from "./types/language";
 import Parser from "./parser";
 
 const parser = new Parser();
@@ -49,6 +49,21 @@ export default class Visitor extends BaseCstVisitor {
         } as SleepCall;
     }
 
+    signalClause(ctx: types.SignalClauseCstChildren) {
+        return {
+            signal: ctx.signalName[0].image,
+            value: ctx.NumberLiteral ? Number(ctx.NumberLiteral[0].image) : ctx.FloatLiteral ? Number(ctx.FloatLiteral[0].image) : ctx.String ? ctx.String[0].image : undefined,
+            type: "signal",
+        } as SignalCall;
+    }
+
+    waitForClause(ctx: types.WaitForClauseCstChildren) {
+        return {
+            signal: ctx.String[0].image,
+            type: "waitfor",
+        } as WaitForCall;
+    }
+
     taskCall(ctx: types.TaskCallCstChildren) {
         let task = this.tasks.find((task) => task.name === ctx.Indentifier[0].image);
 
@@ -69,6 +84,10 @@ export default class Visitor extends BaseCstVisitor {
             return this.visit(ctx.sleepClause);
         } else if (ctx.taskCall) {
             return this.visit(ctx.taskCall);
+        } else if (ctx.signalClause) {
+            return this.visit(ctx.signalClause);
+        } else if (ctx.waitForClause) {
+            return this.visit(ctx.waitForClause);
         }
     }
 

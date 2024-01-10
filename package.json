@@ -4,9 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "bun --bun ./src/index.ts",
-    "types": "bun --bun ./getTypes.ts",
-    "build": "tsc",
-    "test": "bun test"
+    "types": "bun --bun ./getTypes.ts"
   },
   "author": "SpideyZac",
   "keywords": [
@@ -18,7 +16,7 @@
   "license": "MIT",
   "repository": "https://github.com/SpideyZac/Threadly/",
   "description": "The interpreter for the Threadly language.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "bin": {
     "threadly": "./src/index.ts"
   },

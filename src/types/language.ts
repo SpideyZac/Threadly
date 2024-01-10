@@ -1,4 +1,4 @@
-type KeywordType = "log" | "sleep" | "taskCall";
+type KeywordType = "log" | "sleep" | "taskCall" | "signal" | "waitfor";
 
 export interface Keyword {
     [k: string]: any;
@@ -18,6 +18,17 @@ export interface SleepCall extends Keyword {
 export interface TaskCall extends Keyword {
     task: Task;
     type: "taskCall";
+}
+
+export interface SignalCall extends Keyword {
+    signal: string;
+    value?: number | string;
+    type: "signal";
+}
+
+export interface WaitForCall extends Keyword {
+    signal: string;
+    type: "waitfor";
 }
 
 export interface Task {

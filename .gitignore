@@ -2,3 +2,4 @@ brainstorm
 node_modules/
 threadly
 build/
+test.threadly

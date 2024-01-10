@@ -57,6 +57,18 @@ export const Sleep = createToken({
     longer_alt: Indentifier,
 });
 
+export const Signal = createToken({
+    name: "Signal",
+    pattern: /signal/,
+    longer_alt: Indentifier,
+});
+
+export const WaitFor = createToken({
+    name: "WaitFor",
+    pattern: /waitfor/,
+    longer_alt: Indentifier,
+});
+
 // Whitespace
 export const Whitespace = createToken({
     name: "WhiteSpace",
@@ -97,6 +109,8 @@ export const allTokens = [
     EndTask,
     Log,
     Sleep,
+    Signal,
+    WaitFor,
     Parallel,
     Indentifier,
     String,
