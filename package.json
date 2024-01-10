@@ -16,7 +16,7 @@
   "license": "MIT",
   "repository": "https://github.com/SpideyZac/Threadly/",
   "description": "The interpreter for the Threadly language.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "bin": {
     "threadly": "./src/index.ts"
   },

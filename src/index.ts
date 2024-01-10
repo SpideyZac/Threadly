@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 
 import { Lexer } from "chevrotain";
 import { Command } from "commander";
@@ -13,7 +13,7 @@ const program = new Command();
 console.log(figlet.textSync("Threadly"));
 
 program
-    .version("0.0.2")
+    .version("0.0.3")
     .description("The interpreter for the Threadly language")
     .option("-f, --file <file>", "The file to interpret")
     .option("-c", "--clear", "Clear the console before running")

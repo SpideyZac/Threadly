@@ -31,6 +31,7 @@ parallel
 [If you haven't already, install Bun to run the interpreter.](https://bun.sh/docs/installation)
 
 ```bash
+bun add --global threadly
 bunx threadly --help
 ```
 
