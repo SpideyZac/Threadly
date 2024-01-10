@@ -9,7 +9,7 @@ Threadly is a lightweight and modern concurrency scripting language designed to 
 
 [View the v1.0.0 roadmap!](https://github.com/users/SpideyZac/projects/2)
 
-# Example (Check out `examples/`)
+# Example (Check out [`examples/`](https://github.com/SpideyZac/Threadly/tree/master/examples))
 ```threadly
 task log1
     sleep(3000)
