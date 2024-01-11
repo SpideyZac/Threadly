@@ -10,4 +10,4 @@ Required arguments:
 
 ## Description
 
-`parallel` initializes the parallel task calls.
+`parallel` initializes the parallel task calls. Everything below the `parallel` statement must be `taskcall` keywords.
