@@ -45,4 +45,4 @@ bunx --bun threadly --file <file to run here>
 
 # Docs
 
-[**Coming Soon!**](https://threadly.js.org)
+[**Click me!**](https://threadly.js.org)
